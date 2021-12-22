@@ -1,0 +1,27 @@
+﻿<Window x:Name="SelectMultiple1" x:Class="QBProduction.SelectMultiple"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QBProduction"
+        mc:Ignorable="d"
+        Title="Select Multiple" Height="339" Width="656">
+    <Grid Margin="0,0,2,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="383*"/>
+            <ColumnDefinition Width="263*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="dgListMultiple" HorizontalAlignment="Left" Height="262" Margin="10,10,0,0" VerticalAlignment="Top" Width="626" Grid.ColumnSpan="2" Loaded="dgListMultiple_Loaded">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Select"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Item" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Uom" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Qty To Produce"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Name="btnOk" Content="Ok" Grid.Column="1" HorizontalAlignment="Left" Margin="178,278,0,0" VerticalAlignment="Top" Width="75" FontWeight="Bold" Click="btnOk_Click"/>
+        <Button Content="Cancel" Name="btnCancel" HorizontalAlignment="Left" Margin="358,278,0,0" VerticalAlignment="Top" Width="75" FontWeight="Bold" Grid.ColumnSpan="2"/>
+        <Button Content="Clear" Name="btnClear" HorizontalAlignment="Left" Margin="80,278,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" FontWeight="Bold"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+﻿<Window x:Class="QBProduction.ProductionReport"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QBProduction"
+        xmlns:my="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
+        mc:Ignorable="d"
+        Title="Production Report" Height="450" Width="800" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner" WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="312*"/>
+            <ColumnDefinition Width="131*"/>
+            <ColumnDefinition Width="349*"/>
+        </Grid.ColumnDefinitions>
+        <my:CrystalReportsViewer  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="crystalReportViewer1" Grid.ColumnSpan="3"  />
+
+    </Grid>
+</Window>

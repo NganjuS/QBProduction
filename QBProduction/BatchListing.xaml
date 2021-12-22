@@ -1,0 +1,18 @@
+﻿<Window x:Class="QBProduction.BatchListing"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:my="clr-namespace:SAPBusinessObjects.WPF.Viewer;assembly=SAPBusinessObjects.WPF.Viewer"
+        xmlns:local="clr-namespace:QBProduction"
+        mc:Ignorable="d"
+        Title="Batch Listing" Height="450" Width="800" Loaded="Window_Loaded" WindowState="Maximized">
+    <Grid>
+        <Button x:Name="btnView" Content="View" HorizontalAlignment="Left" Margin="404,10,0,0" VerticalAlignment="Top" Width="75" Height="25" FontWeight="Bold" Click="Button_Click"/>
+        <Label Content="Date From" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label Content="Date To" HorizontalAlignment="Left" Margin="198,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <DatePicker x:Name="dtFromDate" HorizontalAlignment="Left" Margin="81,11,0,0" VerticalAlignment="Top"/>
+        <DatePicker x:Name="dtToDate" HorizontalAlignment="Left" Margin="269,11,0,0" VerticalAlignment="Top"/>
+        <my:CrystalReportsViewer Margin="0,45,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Name="crystalReportViewer1" Grid.ColumnSpan="3"  />
+    </Grid>
+</Window>

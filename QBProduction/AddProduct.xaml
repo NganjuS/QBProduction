@@ -1,0 +1,30 @@
+﻿<Window x:Class="QBProduction.AddProduct"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QBProduction"
+        mc:Ignorable="d"
+        Title="Add Product" Height="393" Width="764" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Grid Margin="0,0,2,2">
+        <Label Content="Name/Code" HorizontalAlignment="Left" Margin="24,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Description" HorizontalAlignment="Left" Margin="24,44,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.257,0.615"/>
+        <TextBox x:Name="txtcode" HorizontalAlignment="Left" Height="23" Margin="117,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="253" IsEnabled="False"/>
+        <TextBox x:Name="txtdesc" HorizontalAlignment="Left" Height="46" Margin="117,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="253"/>
+        <Label Content="Sales Account " HorizontalAlignment="Left" Margin="406,11,0,0" VerticalAlignment="Top"/>
+        <Label Content="Cost Of Sales " HorizontalAlignment="Left" Margin="406,44,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmdsalesacc" HorizontalAlignment="Left" Margin="527,14,0,0" VerticalAlignment="Top" Width="170"/>
+        <ComboBox x:Name="cmbcostsales" HorizontalAlignment="Left" Margin="527,48,0,0" VerticalAlignment="Top" Width="169"/>
+        <DataGrid x:Name="dtgridaddprod" HorizontalAlignment="Left" Height="154" Margin="10,168,0,0" VerticalAlignment="Top" Width="712" Visibility="Hidden"/>
+        <Button x:Name="addassemitems" Content="Add Production Items" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top" Width="143" IsEnabled="False"/>
+        <Button x:Name="btnsave" Content="Save" HorizontalAlignment="Left" Margin="180,143,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="280,143,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Product Type" HorizontalAlignment="Left" Margin="28,99,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbprodtype" HorizontalAlignment="Left" Margin="117,99,0,0" VerticalAlignment="Top" Width="253" SelectionChanged="cmbprodtype_SelectionChanged"/>
+        <Label Content="Cost" HorizontalAlignment="Left" Margin="406,75,0,0" VerticalAlignment="Top"/>
+        <Label Content="Unit Of Measure" HorizontalAlignment="Left" Margin="406,106,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtcost" HorizontalAlignment="Left" Height="23" Margin="527,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="169"/>
+        <ComboBox x:Name="cmbuom" HorizontalAlignment="Left" Margin="527,107,0,0" VerticalAlignment="Top" Width="169"/>
+
+    </Grid>
+</Window>

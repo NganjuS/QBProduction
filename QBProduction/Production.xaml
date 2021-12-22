@@ -1,0 +1,127 @@
+﻿<Window x:Class="QBProduction.Production"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+        xmlns:local="clr-namespace:QBProduction"
+        mc:Ignorable="d"
+        Title="Production Process" Height="510.45" Width="1119.3" FontFamily="Microsoft Sans Serif" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded" ResizeMode="NoResize">
+    <Grid Height="477" VerticalAlignment="Top" Margin="0,0,4,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="103*"/>
+            <ColumnDefinition Width="280*"/>
+            <ColumnDefinition Width="416*"/>
+            <ColumnDefinition Width="310*"/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="34*"/>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="396*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Date" HorizontalAlignment="Left" Margin="12,6,0,0" FontWeight="Bold" Width="36"/>
+        <Label Content="Batch No." HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Row="1" Height="22" Width="72"/>
+        <DataGrid x:Name="dgproductionitems" IsReadOnly="True" CanUserAddRows="false" HorizontalAlignment="Left" Height="254" Margin="4,88,0,0" VerticalAlignment="Top" Width="776" Grid.Row="2" Grid.ColumnSpan="3">
+            <DataGrid.Resources>
+                <local:MaxProduceConverter x:Key="MaxProduceConverter" />
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <!-- <DataTrigger Binding="{Binding Total_Quantity, Converter={StaticResource MaxProduceConverter}, ConverterParameter=Qty_Available}" Value="True">
+                    <Setter Property="Background" Value="LawnGreen"></Setter>
+                </DataTrigger>-->
+                        <DataTrigger Value="true">
+                            <DataTrigger.Binding>
+                                <MultiBinding Converter="{StaticResource MaxProduceConverter}">
+                                    <Binding />
+                                    <!-- <Binding Path="Total Quantity" />
+                                    <Binding Path="Qty Available" /> -->
+                                </MultiBinding>
+                            </DataTrigger.Binding>
+                            <Setter Property="Background" Value="Red"></Setter>
+                        </DataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Product"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Unit of Measure"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Cost"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Qty Available"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Qty Required/Unit"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Value/Unit"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Total Qty Required"/>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Total Value"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DatePicker x:Name="dtproddate" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left" Margin="13,6,0,0" VerticalAlignment="Top" Width="145" Height="24" Grid.Column="1"/>
+        <TextBox x:Name="txtprodno" HorizontalAlignment="Left" Height="19" Margin="7,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="111" IsReadOnly="True" Grid.Row="1" Grid.Column="1"/>
+        <Label Content="" HorizontalAlignment="Left" Margin="68,26,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Height="24" Width="10" Grid.RowSpan="2"/>
+        <Label Content="BOM" HorizontalAlignment="Left" Margin="186,6,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.027,0.708" FontWeight="Bold" Grid.Column="1" Height="24" Width="38"/>
+        <ComboBox x:Name="cmbbomlist" HorizontalAlignment="Left" Margin="4,6,0,0" VerticalAlignment="Top" Width="151" SelectionChanged="cmbbomlist_SelectionChanged" Grid.Column="2" Height="20"/>
+        <Label x:Name="lblproditem" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="164" FontWeight="Bold" Grid.Row="1" Height="25" Grid.Column="2"/>
+        <Label Content="Qty To Produce" HorizontalAlignment="Left" Margin="160,9,0,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="2" Height="24" Width="97" Grid.Row="1"/>
+        <TextBox x:Name="txtqtytoprod" HorizontalAlignment="Left" Height="23" Margin="262,11,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" Grid.Row="1" Grid.Column="2" KeyUp="txtqtytoprod_KeyUp"/>
+        <Button x:Name="btnProcessProduction" Content="Process" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Width="102" FontWeight="Bold" Grid.Row="2" Height="18" Grid.Column="1" Click="btnProcessProduction_Click"/>
+        <Label Content="Total Value Of Production" HorizontalAlignment="Left" Margin="206,348,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1" Height="24" Width="152" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="txttotalprodval" HorizontalAlignment="Left" Height="23" Margin="99,348,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="149" TextAlignment="Right" FontWeight="Bold" Grid.Column="2" IsEnabled="False"/>
+        <Label Content="UOM" Grid.Column="1" HorizontalAlignment="Left" Margin="184,0,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" Width="39" Height="24"/>
+        <Label Content="Status" HorizontalAlignment="Left" Margin="12,19,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" Height="24" Width="45"/>
+        <Label Content="Item" Grid.Column="1" HorizontalAlignment="Left" Margin="187,9,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" Height="25" Width="37" RenderTransformOrigin="-0.189,0.52"/>
+        <Label Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="378,29,0,0" Grid.Row="2" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Height="24" Width="10">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="2.174"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <Label Content="Max. Can Build" Grid.Column="2" HorizontalAlignment="Left" Margin="162,6,0,0" VerticalAlignment="Top" FontWeight="Bold" RenderTransformOrigin="0.5,0.5" Height="23" Width="94">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-0.384"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <TextBox x:Name="txtMaxCanBuild" Grid.Column="2" HorizontalAlignment="Left" Height="20" Margin="262,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96" IsEnabled="False"/>
+        <Label x:Name="lblProdCost" Content="Production Cost " HorizontalAlignment="Left" Margin="45,349,0,0" Grid.Row="2" VerticalAlignment="Top" FontWeight="Bold" Width="114" Height="24" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="txtItemCost" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="61,350,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" IsEnabled="False" TextAlignment="Right"/>
+        <Label x:Name="lblBatchStatus" Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="10,17,0,0" Grid.Row="2" VerticalAlignment="Top" Width="146" FontWeight="Bold" FontSize="14" Height="26"/>
+        <Label x:Name="lblproduom" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="145" FontWeight="Bold" Height="21"/>
+        <Label Content="Comments" Grid.Column="2" HorizontalAlignment="Left" Margin="160,1,0,0" VerticalAlignment="Top" FontWeight="Bold" Grid.Row="2" Height="24" Width="70"/>
+        <TextBox x:Name="txtRemarks" Grid.Column="2" HorizontalAlignment="Left" Height="58" Margin="258,3,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="112" VerticalScrollBarVisibility="Auto"/>
+        <Button x:Name="btnNew" Content="New" HorizontalAlignment="Left" Margin="12,66,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" FontWeight="Bold" Click="btnNew_Click" Height="18"/>
+        <Button x:Name="btnShowBatches" Content="..." Grid.Column="1" HorizontalAlignment="Left" Margin="135,17,0,0" Grid.Row="1" VerticalAlignment="Top" Width="23" Height="19" Click="btnShowBatches_Click"/>
+        <Button x:Name="btnPrint" Content="Print" Grid.Column="1" HorizontalAlignment="Left" Margin="162,66,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" FontWeight="Bold" Click="btnPrint_Click" Height="18"/>
+        <Button x:Name="btnModify" Content="Modify" Grid.Column="2" HorizontalAlignment="Left" Margin="38,66,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" FontWeight="Bold" Click="btnModify_Click" Height="18"/>
+        <Button x:Name="btnDelete" Content="Delete" Grid.Column="2" HorizontalAlignment="Left" Margin="192,65,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" FontWeight="Bold" Click="btnDelete_Click" Height="18"/>
+        <Button x:Name="btnMassProduce" Content="Select Many &gt;&gt;" Grid.Column="2" HorizontalAlignment="Left" Margin="310,66,0,0" Grid.Row="2" VerticalAlignment="Top" Width="119" FontWeight="Bold" Click="btnMassProduce_Click" Height="18" Visibility="Hidden" Grid.ColumnSpan="2"/>
+        <DataGrid x:Name="dgbomlist" Grid.Column="3" HorizontalAlignment="Left" Height="254" Margin="134,89,0,0" Grid.Row="2" VerticalAlignment="Top" Width="16" Visibility="Hidden" CanUserAddRows="False" CanUserDeleteRows="True">
+            <DataGrid.Resources>
+                <Style x:Key="addeventhandler">
+                    <EventSetter Event="CheckBox.Checked" Handler="OnTicked"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+        <DataGrid DataGridCell.Selected="Grid_Selected"  x:Name="massproddatagrid" Grid.Column="3" HorizontalAlignment="Left" Height="408" Margin="10,6,0,0" VerticalAlignment="Top" Width="279" Grid.RowSpan="3" SelectionUnit="Cell" SelectionMode="Single">
+            <DataGrid.Resources>
+
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Status"/>
+                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Item" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{x:Null}" CanUserSort="False" ClipboardContentBinding="{x:Null}" Header="To Produce"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="btnLoad" Content="Load " Grid.Column="3" HorizontalAlignment="Left" Margin="96,348,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Height="25" Click="Button_Click" IsEnabled="False"/>
+        <ProgressBar x:Name="pgbItemGroup" Grid.Column="2" HorizontalAlignment="Left" Height="25" Margin="275,348,0,0" Grid.Row="2" VerticalAlignment="Top" Width="137" />
+        <Button x:Name="btnCancel" Content="Cancel" Grid.Column="3" HorizontalAlignment="Left" Margin="188,348,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Height="25" Click="btnCancel_Click"/>
+        <Label x:Name="lblShowProgress" Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="275,373,0,0" Grid.Row="2" VerticalAlignment="Top" Width="263" Foreground="#FF0818B9" FontWeight="Bold" Height="23" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>
