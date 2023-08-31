@@ -368,13 +368,14 @@ namespace QBProduction
                             string totalval = itemtbl.Rows[0]["Total Value"].ToString();
                             string qtytoproduce = itemtbl.Rows[0]["QtyToProduce"].ToString();
                             string ValueToProduce = itemtbl.Rows[0]["ValueToProduce"].ToString();
-                            string assmnm = itemtbl.Rows[0]["AssemblyName"].ToString();
+                            Decimal sumtotval = itemtbl.AsEnumerable().Sum(rw => rw.Field<Decimal>("Total Value"));
+                        string assmnm = itemtbl.Rows[0]["AssemblyName"].ToString();
                             string assmuom = itemtbl.Rows[0]["AssemblyUOM"].ToString();
                         this.Dispatcher.Invoke(() => {
                                 if(!this.IsBatchNoExists())
                                 {
                                     this.txtprodno.Text = this.ReturnProductionNumber();
-                                    ProcessBatch(itemidentifier, assmnm, assmuom, double.Parse(qtytoproduce), double.Parse(ValueToProduce), itemtbl
+                                    ProcessBatch(itemidentifier, assmnm, assmuom, double.Parse(qtytoproduce), sumtotval, itemtbl
                                    );
                                     
                                 }
@@ -404,7 +405,7 @@ namespace QBProduction
                     return;
                 }
                 this.Dispatcher.Invoke(() => {
-                    ProcessBatch(this.cmbbomlist.SelectedValue.ToString(), this.lblproditem.Content.ToString(), this.lblproduom.Content.ToString(), Convert.ToDouble(this.txtqtytoprod.Text), Convert.ToDouble(this.txttotalprodval.Text), new DataTable("#emptytbl"));
+                    ProcessBatch(this.cmbbomlist.SelectedValue.ToString(), this.lblproditem.Content.ToString(), this.lblproduom.Content.ToString(), Convert.ToDouble(this.txtqtytoprod.Text), Convert.ToDecimal(this.txttotalprodval.Text), new DataTable("#emptytbl"));
                 });
 
             }
@@ -417,7 +418,7 @@ namespace QBProduction
             this.lblShowProgress.Content = "Production complete .."; 
         }
 
-        void ProcessBatch(string itemcode,string item,string uom, double qtyproduce, double itemproductval, DataTable lineitems)
+        void ProcessBatch(string itemcode,string item,string uom, double qtyproduce, decimal itemproductval, DataTable lineitems)
         {
             if(!IsMassProduce && this.lblBatchStatus.Content.ToString() == "Open" && this.IsBatchNoExists())
             {
@@ -459,7 +460,7 @@ namespace QBProduction
                         productionitem = this.txtprodno.Text,
                         uom = uom,//this.lblproduom.Content.ToString(),
                         totalqtyproduced = qtyproduce,//Convert.ToDouble(this.txtqtytoprod.Text),
-                        totalvalue = itemproductval,//Convert.ToDouble(this.txttotalprodval.Text),
+                        totalvalue = Convert.ToDouble(itemproductval),//Convert.ToDouble(this.txttotalprodval.Text),
                         comments = this.txtRemarks.Text,
                         batchstatus = "Pending"
 
@@ -485,8 +486,8 @@ namespace QBProduction
                         transactionid = prodrun.TxnID.GetValue(),
                         productionitem = item,//this.lblproditem.Content.ToString(),
                         uom = uom,//this.lblproduom.Content.ToString(),
-                        totalqtyproduced = qtyproduce,//Convert.ToDouble(this.txtqtytoprod.Text),
-                        totalvalue = itemproductval,//Convert.ToDouble(this.txttotalprodval.Text),
+                        totalqtyproduced = qtyproduce,//Convert.ToDouble(this.txtqtytopbtnShowBatches_Clickdval.Text),
+                        totalvalue = Convert.ToDouble(itemproductval),
                         comments = this.txtRemarks.Text,
                         batchstatus = "Processed"
 
@@ -700,6 +701,8 @@ namespace QBProduction
             Interop.QBFC13.IBuildAssemblyRet returneddata = assemd.GetAt(0);
             currenttransbom = returneddata.TxnID.GetValue();
             editseq = returneddata.EditSequence.GetValue();
+         
+           
             BomRun dbomrn = Controller.GetBomRun(currenttransbom);
             this.Dispatcher.Invoke(() =>
             {

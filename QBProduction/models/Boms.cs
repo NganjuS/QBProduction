@@ -14,6 +14,7 @@ namespace QBProduction
         public virtual string assemblylistid { get; set; }
         public virtual string assemblyitem { get; set; }
         public virtual string uom { get; set; }
+        public virtual bool isactive { get; set; }
         public virtual DateTime createdon { get; set; }
         public virtual DateTime modifiedon { get; set; }
         public virtual string createdby { get; set; }
@@ -29,6 +30,7 @@ namespace QBProduction
             Map(x => x.bomname);
             Map(x => x.assemblylistid);
             Map(x => x.assemblyitem);
+            Map(x => x.isactive);
             Map(x => x.uom);
             Map(x => x.createdon);
             Map(x => x.modifiedon);

@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Interop.QBFC13;
+using NHibernate.Criterion;
 
 namespace QBProduction
 {
@@ -38,7 +39,10 @@ namespace QBProduction
         {
 
         }
-
+        public static void showMessage(string mssg)
+        {
+            MessageBox.Show(mssg);
+        }
         private void btnrundb_Click(object sender, RoutedEventArgs e)
         {
 
@@ -80,7 +84,31 @@ namespace QBProduction
 
             try
             {
-                List<Boms> bomlist = Controller.GetData<Boms>();
+
+                //check inactive boms and 
+                List<Boms> bomlist_all = Controller.GetData<Boms>();
+                List<Boms> deactivatedboms = new List<Boms>();
+                foreach (var bom in bomlist_all)
+                {
+                    if (!CheckItemExists(bom, assemlylist))
+                    {
+                        bom.isactive = false;
+                        deactivatedboms.Add(bom);
+                    }
+                    
+                }
+                if(deactivatedboms.Count > 0)
+                {
+                    foreach(var updatedbom in deactivatedboms)
+                    {
+                        Controller.SaveData<Boms>(updatedbom);
+                    }
+                }
+
+
+                List<Boms> bomlist = Controller.GetData<Boms>().Where(x => x.isactive).ToList();
+
+               
                 if (assemlylist.Count > 0 && (bomlist == null || bomlist.Count == 0 || bomlist.Count < assemlylist.Count))
                 {
 
@@ -93,12 +121,19 @@ namespace QBProduction
                           
                             if (!bomlist.Exists(x => x.assemblylistid == assemitem.ListID.GetValue()))
                             {
+                                string assemblyitem = assemitem.Name.GetValue();
+                                if (assemitem.UnitOfMeasureSetRef == null)
+                                {
+                                    MessageBox.Show($"Item {assemblyitem} does not have a unit of measure specified, it will be skippied !!");
+                                    continue;
+                                }
 
                                 Boms newbom = new Boms()
                                 {
                                     assemblylistid = assemitem.ListID.GetValue(),
                                     assemblyitem = assemitem.Name.GetValue(),
                                     uom = assemitem.UnitOfMeasureSetRef.FullName.GetValue(),
+                                    isactive  = true,
                                     bomname = "Bom:" + assemitem.Name.GetValue(),
                                     createdon = DateTime.Now.Date,
                                     modifiedon = DateTime.Now.Date
@@ -125,6 +160,19 @@ namespace QBProduction
                 MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "Unknown error occurred");
             }
  
+        }
+        private bool CheckItemExists(Boms bom,IItemInventoryAssemblyRetList assemlylist)
+        {
+            for (int i = 0; i < assemlylist.Count; i++)
+            {
+                IItemInventoryAssemblyRet assemitem = assemlylist.GetAt(i);
+                string assemblylistid = assemitem.ListID.GetValue();
+                if (bom.assemblylistid == assemblylistid)
+                {
+                   return true;
+                }
+            }
+            return false;
         }
         private void StartProduction(object sender, RoutedEventArgs e)
         {
@@ -203,6 +251,11 @@ namespace QBProduction
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
         {
             new RawMaterialReport().ShowDialog();
+        }
+
+        private void MenuItem_Click_5(object sender, RoutedEventArgs e)
+        {
+            new  ProductionSummaryReport().ShowDialog();
         }
     }
 }

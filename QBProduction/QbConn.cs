@@ -60,6 +60,7 @@ namespace QBProduction
             sessionManager.CloseConnection();
             connectionOpen = false;
         }
+       
         public void BuildTxnDelRq(string txid)
         {
             ITxnDel TxnDelRq = requestMsgSet.AppendTxnDelRq();
@@ -76,9 +77,10 @@ namespace QBProduction
             // 
             BuildAssemblyQueryRq.metaData.SetValue(ENmetaData.mdMetaDataAndResponseData);
                                       BuildAssemblyQueryRq.ORBuildAssemblyQuery.BuildAssemblyFilter.MaxReturned.SetValue(1);
-           // BuildAssemblyQueryRq.iterator.SetValue(ENiterator.itStart);
+            // BuildAssemblyQueryRq.iterator.SetValue(ENiterator.itStart);
             
-            
+
+
             if (num == 0)
             {
                // BuildAssemblyQueryRq.iteratorID.SetValue("088001");

@@ -27,6 +27,7 @@
                 <MenuItem Header="Produce Batch" Click="MenuItem_Click_1"/>
                 <MenuItem Header="Batch Listing" Click="MenuItem_Click_3"/>
                 <MenuItem Header="Raw Materials Usage" Click="MenuItem_Click_4"/>
+                <MenuItem Header="Production Summary Report" Click="MenuItem_Click_5"/>
             </MenuItem>
         </Menu>
         <StatusBar HorizontalAlignment="Left" Height="34" Margin="0,356,0,0" VerticalAlignment="Top" Width="959" Grid.ColumnSpan="2" Grid.Row="1"/>
