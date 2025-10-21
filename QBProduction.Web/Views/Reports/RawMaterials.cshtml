@@ -1,0 +1,92 @@
+@model IEnumerable<QBProduction.Web.Models.BomRun>
+
+@{
+    ViewBag.Title = "Raw Materials Usage Report";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Raw Materials Usage Report</h2>
+
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">End Date</label>
+                <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">&nbsp;</label><br />
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Raw Materials Usage from @ViewBag.StartDate.ToString("MM/dd/yyyy") to @ViewBag.EndDate.ToString("MM/dd/yyyy")</h5>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Batch Ref</th>
+                                <th>Production Item</th>
+                                <th>Date</th>
+                                <th>Quantity</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var run in Model)
+                            {
+                                <tr>
+                                    <td>@run.bomrunref</td>
+                                    <td>@run.productionitem</td>
+                                    <td>@run.bomrundate.ToString("MM/dd/yyyy")</td>
+                                    <td>@run.totalqtyproduced.ToString("N2") @run.uom</td>
+                                    <td>$@run.totalvalue.ToString("N2")</td>
+                                </tr>
+                                if (run.BomRunItems != null && run.BomRunItems.Any())
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <table class="table table-sm">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Item</th>
+                                                        <th>Qty Used</th>
+                                                        <th>Cost</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in run.BomRunItems)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.product</td>
+                                                            <td>@item.totalqtyused.ToString("N2") @item.uom</td>
+                                                            <td>$@item.cost.ToString("N2")</td>
+                                                            <td>$@item.totalvalue.ToString("N2")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-center">No data found for the selected date range</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

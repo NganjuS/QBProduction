@@ -1,0 +1,102 @@
+@model IEnumerable<QBProduction.Web.Models.BomRun>
+
+@{
+    ViewBag.Title = "Production Summary Report";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Production Summary Report</h2>
+
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">End Date</label>
+                <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">&nbsp;</label><br />
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Summary by Product</h5>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Summary != null)
+                {
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Product</th>
+                                <th>Total Quantity</th>
+                                <th>Total Value</th>
+                                <th>Batch Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var summary in ViewBag.Summary)
+                            {
+                                <tr>
+                                    <td>@summary.Product</td>
+                                    <td>@summary.TotalQuantity.ToString("N2")</td>
+                                    <td>$@summary.TotalValue.ToString("N2")</td>
+                                    <td>@summary.BatchCount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>Detailed Production Runs</h5>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Batch Ref</th>
+                                <th>Item</th>
+                                <th>Date</th>
+                                <th>Quantity</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var run in Model)
+                            {
+                                <tr>
+                                    <td>@run.bomrunref</td>
+                                    <td>@run.productionitem</td>
+                                    <td>@run.bomrundate.ToString("MM/dd/yyyy")</td>
+                                    <td>@run.totalqtyproduced.ToString("N2") @run.uom</td>
+                                    <td>$@run.totalvalue.ToString("N2")</td>
+                                    <td>
+                                        <span class="badge bg-@(run.batchstatus == "Completed" ? "success" : "warning")">
+                                            @run.batchstatus
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-center">No production data for the selected period</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

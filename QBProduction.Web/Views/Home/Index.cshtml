@@ -1,0 +1,60 @@
+@model IEnumerable<QBProduction.Web.Models.Boms>
+
+@{
+    ViewBag.Title = "Home";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Bill of Materials Listing</h2>
+        <div class="mb-3">
+            @Html.ActionLink("Start Production", "StartProduction", "Production", null, new { @class = "btn btn-success me-2" })
+            @Html.ActionLink("Load New Bom(s)", "LoadNew", "Bom", null, new { @class = "btn btn-primary" })
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>BOM Name</th>
+                    <th>Production Item</th>
+                    <th>Created On</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.bomname</td>
+                            <td>@item.assemblyitem</td>
+                            <td>@item.createdon.ToString("MM/dd/yyyy")</td>
+                            <td>
+                                @if (item.isactive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", "Bom", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
+                                @Html.ActionLink("Start Production", "StartProduction", "Production", new { bomId = item.Id }, new { @class = "btn btn-sm btn-success" })
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">No BOMs found. Click "Load New Bom(s)" to load from QuickBooks.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

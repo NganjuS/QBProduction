@@ -1,0 +1,59 @@
+@model IEnumerable<QBProduction.Web.Models.BomRun>
+
+@{
+    ViewBag.Title = "Batch Listing";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Production Batch Listing</h2>
+        <div class="mb-3">
+            @Html.ActionLink("Start New Batch", "StartProduction", "Production", null, new { @class = "btn btn-success" })
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Batch Ref</th>
+                    <th>Production Item</th>
+                    <th>Quantity</th>
+                    <th>Value</th>
+                    <th>Date</th>
+                    <th>Processed By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.bomrunref</td>
+                            <td>@item.productionitem</td>
+                            <td>@item.totalqtyproduced.ToString("N2") @item.uom</td>
+                            <td>$@item.totalvalue.ToString("N2")</td>
+                            <td>@item.bomrundate.ToString("MM/dd/yyyy HH:mm")</td>
+                            <td>@item.processedby</td>
+                            <td>
+                                <span class="badge bg-@(item.batchstatus == "Completed" ? "success" : "warning")">
+                                    @item.batchstatus
+                                </span>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "BatchDetails", new { id = item.Id }, new { @class = "btn btn-sm btn-info" })
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">No batches found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
