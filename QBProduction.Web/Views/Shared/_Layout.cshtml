@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - QuickBooks Production Module</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Production Module</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        @Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="productionDropdown" role="button" data-bs-toggle="dropdown">
+                            Production
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Bill of Materials", "Index", "Bom", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Start Production", "StartProduction", "Production", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Batch Listing", "BatchListing", "Production", null, new { @class = "dropdown-item" })</li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>@Html.ActionLink("Raw Materials Usage", "RawMaterials", "Reports", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Production Summary", "ProductionSummary", "Reports", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @RenderBody()
+
+        <hr />
+        <footer class="py-3">
+            <p class="text-center text-muted">&copy; @DateTime.Now.Year - QuickBooks Production Module</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

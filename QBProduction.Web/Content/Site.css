@@ -1,0 +1,97 @@
+/* Custom styles for QuickBooks Production Module */
+
+body {
+    padding-top: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar customization */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Table customization */
+.table {
+    margin-top: 20px;
+}
+
+.table thead th {
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Card customization */
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* Button spacing */
+.btn {
+    margin-right: 5px;
+}
+
+/* Form styling */
+.form-horizontal .form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+/* Alert customization */
+.alert {
+    margin-top: 15px;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.4em 0.6em;
+    font-size: 0.85em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Print styles for reports */
+@media print {
+    .navbar, .btn, footer {
+        display: none !important;
+    }
+
+    .container {
+        width: 100%;
+        max-width: none;
+    }
+}

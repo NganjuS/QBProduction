@@ -1,0 +1,63 @@
+@model QBProduction.Web.Models.Boms
+
+@{
+    ViewBag.Title = "Edit BOM";
+}
+
+<h2>Edit Bill of Materials</h2>
+
+@using (Html.BeginForm("Edit", "Bom", FormMethod.Post, new { @class = "mt-3" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group row mb-3">
+            @Html.LabelFor(model => model.bomname, htmlAttributes: new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.bomname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.bomname, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            @Html.LabelFor(model => model.assemblyitem, htmlAttributes: new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.assemblyitem, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.assemblyitem, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            @Html.LabelFor(model => model.uom, "Unit of Measure", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.uom, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.uom, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            @Html.LabelFor(model => model.isactive, htmlAttributes: new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.isactive, new { @class = "form-check-input" })
+                    @Html.ValidationMessageFor(model => model.isactive, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
