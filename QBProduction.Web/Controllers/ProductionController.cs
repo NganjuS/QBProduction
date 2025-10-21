@@ -1,26 +1,25 @@
 using System;
+using System.Data.Entity;
 using System.Web.Mvc;
 using QBProduction.Web.Models;
-using QBProduction.Web.Helpers;
+using QBProduction.Web.Data;
 using System.Linq;
-using NHibernate.Linq;
 
 namespace QBProduction.Web.Controllers
 {
     public class ProductionController : Controller
     {
+        private QBProductionContext db = new QBProductionContext();
+
         // GET: Production
         public ActionResult Index()
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var bomRuns = session.Query<BomRun>()
-                    .OrderByDescending(b => b.bomrundate)
-                    .Take(100)
-                    .ToList();
+            var bomRuns = db.BomRuns
+                .OrderByDescending(b => b.bomrundate)
+                .Take(100)
+                .ToList();
 
-                return View(bomRuns);
-            }
+            return View(bomRuns);
         }
 
         // GET: Production/StartProduction
@@ -28,18 +27,14 @@ namespace QBProduction.Web.Controllers
         {
             if (bomId.HasValue)
             {
-                using (var session = NHibernateHelper.OpenSession())
-                {
-                    var bom = session.Query<Boms>()
-                        .Where(b => b.Id == bomId.Value)
-                        .Fetch(b => b._bomitems)
-                        .FirstOrDefault();
+                var bom = db.Boms
+                    .Include(b => b.BomItems)
+                    .FirstOrDefault(b => b.Id == bomId.Value);
 
-                    if (bom == null)
-                        return HttpNotFound();
+                if (bom == null)
+                    return HttpNotFound();
 
-                    ViewBag.Bom = bom;
-                }
+                ViewBag.Bom = bom;
             }
 
             return View();
@@ -54,28 +49,24 @@ namespace QBProduction.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    using (var session = NHibernateHelper.OpenSession())
-                    using (var transaction = session.BeginTransaction())
+                    bomRun.bomrundate = DateTime.Now;
+                    bomRun.batchstatus = "Pending";
+
+                    // Generate unique reference number
+                    var settings = db.BomSettings.FirstOrDefault();
+                    if (settings != null)
                     {
-                        bomRun.bomrundate = DateTime.Now;
-                        bomRun.batchstatus = "Pending";
-
-                        // Generate unique reference number
-                        var settings = session.Query<BomSettings>().FirstOrDefault();
-                        if (settings != null)
-                        {
-                            settings.bomrefno++;
-                            bomRun.bomrunref = settings.bomcode + settings.bomrefno.ToString("D6");
-                            session.Update(settings);
-                        }
-                        else
-                        {
-                            bomRun.bomrunref = "PROD" + DateTime.Now.ToString("yyyyMMddHHmmss");
-                        }
-
-                        session.Save(bomRun);
-                        transaction.Commit();
+                        settings.bomrefno++;
+                        bomRun.bomrunref = settings.bomcode + settings.bomrefno.ToString("D6");
+                        db.Entry(settings).State = EntityState.Modified;
                     }
+                    else
+                    {
+                        bomRun.bomrunref = "PROD" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    }
+
+                    db.BomRuns.Add(bomRun);
+                    db.SaveChanges();
 
                     TempData["Success"] = "Production batch started successfully";
                     return RedirectToAction("Index");
@@ -93,31 +84,33 @@ namespace QBProduction.Web.Controllers
         // GET: Production/BatchListing
         public ActionResult BatchListing()
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var batches = session.Query<BomRun>()
-                    .OrderByDescending(b => b.bomrundate)
-                    .ToList();
+            var batches = db.BomRuns
+                .OrderByDescending(b => b.bomrundate)
+                .ToList();
 
-                return View(batches);
-            }
+            return View(batches);
         }
 
         // GET: Production/BatchDetails/5
         public ActionResult BatchDetails(int id)
         {
-            using (var session = NHibernateHelper.OpenSession())
+            var bomRun = db.BomRuns
+                .Include(b => b.BomRunItems)
+                .FirstOrDefault(b => b.Id == id);
+
+            if (bomRun == null)
+                return HttpNotFound();
+
+            return View(bomRun);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                var bomRun = session.Query<BomRun>()
-                    .Where(b => b.Id == id)
-                    .Fetch(b => b._bomrunsitems)
-                    .FirstOrDefault();
-
-                if (bomRun == null)
-                    return HttpNotFound();
-
-                return View(bomRun);
+                db.Dispose();
             }
+            base.Dispose(disposing);
         }
     }
 }

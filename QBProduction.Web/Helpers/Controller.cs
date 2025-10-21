@@ -1,8 +1,7 @@
 using System;
 using System.IO;
 using QBProduction.Web.Models;
-using NHibernate;
-using NHibernate.Linq;
+using QBProduction.Web.Data;
 using System.Linq;
 
 namespace QBProduction.Web.Helpers
@@ -36,22 +35,22 @@ namespace QBProduction.Web.Helpers
                         dbname = strArray[1];
                 }
             }
-            return $"server={servername};uid={userid};pwd={pwd};database={dbname}";
+            return $"server={servername};uid={userid};pwd={pwd};database={dbname};persistsecurityinfo=True;";
         }
 
-        public static T GetOneRecord<T>()
+        public static T GetOneRecord<T>() where T : class
         {
-            using (var session = NHibernateHelper.OpenSession())
+            using (var db = new QBProductionContext())
             {
-                return session.Query<T>().FirstOrDefault();
+                return db.Set<T>().FirstOrDefault();
             }
         }
 
-        public static IQueryable<T> GetAllRecords<T>()
+        public static IQueryable<T> GetAllRecords<T>() where T : class
         {
-            using (var session = NHibernateHelper.OpenSession())
+            using (var db = new QBProductionContext())
             {
-                return session.Query<T>();
+                return db.Set<T>();
             }
         }
     }

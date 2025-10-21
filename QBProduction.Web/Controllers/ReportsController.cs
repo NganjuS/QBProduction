@@ -1,14 +1,16 @@
 using System;
+using System.Data.Entity;
 using System.Web.Mvc;
 using QBProduction.Web.Models;
-using QBProduction.Web.Helpers;
+using QBProduction.Web.Data;
 using System.Linq;
-using NHibernate.Linq;
 
 namespace QBProduction.Web.Controllers
 {
     public class ReportsController : Controller
     {
+        private QBProductionContext db = new QBProductionContext();
+
         // GET: Reports/RawMaterials
         public ActionResult RawMaterials(DateTime? startDate, DateTime? endDate)
         {
@@ -17,19 +19,16 @@ namespace QBProduction.Web.Controllers
             if (!endDate.HasValue)
                 endDate = DateTime.Now;
 
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var bomRuns = session.Query<BomRun>()
-                    .Where(b => b.bomrundate >= startDate && b.bomrundate <= endDate)
-                    .Fetch(b => b._bomrunsitems)
-                    .OrderBy(b => b.bomrundate)
-                    .ToList();
+            var bomRuns = db.BomRuns
+                .Include(b => b.BomRunItems)
+                .Where(b => b.bomrundate >= startDate && b.bomrundate <= endDate)
+                .OrderBy(b => b.bomrundate)
+                .ToList();
 
-                ViewBag.StartDate = startDate.Value;
-                ViewBag.EndDate = endDate.Value;
+            ViewBag.StartDate = startDate.Value;
+            ViewBag.EndDate = endDate.Value;
 
-                return View(bomRuns);
-            }
+            return View(bomRuns);
         }
 
         // GET: Reports/ProductionSummary
@@ -40,31 +39,37 @@ namespace QBProduction.Web.Controllers
             if (!endDate.HasValue)
                 endDate = DateTime.Now;
 
-            using (var session = NHibernateHelper.OpenSession())
+            var bomRuns = db.BomRuns
+                .Where(b => b.bomrundate >= startDate && b.bomrundate <= endDate)
+                .OrderBy(b => b.bomrundate)
+                .ToList();
+
+            // Group by product for summary
+            var summary = bomRuns
+                .GroupBy(b => b.productionitem)
+                .Select(g => new
+                {
+                    Product = g.Key,
+                    TotalQuantity = g.Sum(b => b.totalqtyproduced),
+                    TotalValue = g.Sum(b => b.totalvalue),
+                    BatchCount = g.Count()
+                })
+                .ToList();
+
+            ViewBag.StartDate = startDate.Value;
+            ViewBag.EndDate = endDate.Value;
+            ViewBag.Summary = summary;
+
+            return View(bomRuns);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                var bomRuns = session.Query<BomRun>()
-                    .Where(b => b.bomrundate >= startDate && b.bomrundate <= endDate)
-                    .OrderBy(b => b.bomrundate)
-                    .ToList();
-
-                // Group by product for summary
-                var summary = bomRuns
-                    .GroupBy(b => b.productionitem)
-                    .Select(g => new
-                    {
-                        Product = g.Key,
-                        TotalQuantity = g.Sum(b => b.totalqtyproduced),
-                        TotalValue = g.Sum(b => b.totalvalue),
-                        BatchCount = g.Count()
-                    })
-                    .ToList();
-
-                ViewBag.StartDate = startDate.Value;
-                ViewBag.EndDate = endDate.Value;
-                ViewBag.Summary = summary;
-
-                return View(bomRuns);
+                db.Dispose();
             }
+            base.Dispose(disposing);
         }
     }
 }

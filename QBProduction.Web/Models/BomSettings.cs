@@ -1,26 +1,23 @@
-using FluentNHibernate.Mapping;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBProduction.Web.Models
 {
+    [Table("BomSettings")]
     public class BomSettings
     {
-        public virtual int Id { get; set; }
-        public virtual int bomrefno { get; set; }
-        public virtual string bomcode { get; set; }
-        public virtual int stockrefno { get; set; }
-        public virtual string stockcode { get; set; }
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-    public class BomSettingsMap : ClassMap<BomSettings>
-    {
-        public BomSettingsMap()
-        {
-            Id(x => x.Id);
-            Map(x => x.bomrefno);
-            Map(x => x.bomcode);
-            Map(x => x.stockcode);
-            Map(x => x.stockrefno);
-            Table("BomSettings");
-        }
+        public int bomrefno { get; set; }
+
+        [StringLength(50)]
+        public string bomcode { get; set; }
+
+        public int stockrefno { get; set; }
+
+        [StringLength(50)]
+        public string stockcode { get; set; }
     }
 }

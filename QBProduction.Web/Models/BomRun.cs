@@ -1,41 +1,53 @@
-using FluentNHibernate.Mapping;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBProduction.Web.Models
 {
+    [Table("BomRun")]
     public class BomRun
     {
-        public virtual int Id { get; set; }
-        public virtual string bomrunref { get; set; }
-        public virtual string transactionid { get; set; }
-        public virtual string batchstatus { get; set; }
-        public virtual string productionitem { get; set; }
-        public virtual string uom { get; set; }
-        public virtual double totalqtyproduced { get; set; }
-        public virtual double totalvalue { get; set; }
-        public virtual string comments { get; set; }
-        public virtual DateTime bomrundate { get; set; }
-        public virtual IList<BomRunItems> _bomrunsitems { get; set; }
-        public virtual string processedby { get; set; }
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-    public class BomRunMap : ClassMap<BomRun>
-    {
-        public BomRunMap()
+        [StringLength(100)]
+        [Index(IsUnique = true)]
+        public string bomrunref { get; set; }
+
+        [StringLength(100)]
+        public string transactionid { get; set; }
+
+        [StringLength(50)]
+        public string batchstatus { get; set; }
+
+        [StringLength(255)]
+        public string productionitem { get; set; }
+
+        [StringLength(50)]
+        public string uom { get; set; }
+
+        public double totalqtyproduced { get; set; }
+
+        public double totalvalue { get; set; }
+
+        [StringLength(1000)]
+        public string comments { get; set; }
+
+        public DateTime bomrundate { get; set; }
+
+        [StringLength(100)]
+        public string processedby { get; set; }
+
+        // Navigation property
+        public virtual ICollection<BomRunItems> BomRunItems { get; set; }
+
+        public BomRun()
         {
-            Id(x => x.Id);
-            Map(x => x.bomrunref).Unique();
-            Map(x => x.bomrundate);
-            Map(x => x.transactionid);
-            Map(x => x.productionitem);
-            Map(x => x.uom);
-            Map(x => x.totalqtyproduced);
-            Map(x => x.totalvalue);
-            Map(x => x.comments);
-            Map(x => x.batchstatus);
-            Map(x => x.processedby);
-            HasMany(x => x._bomrunsitems).Cascade.Delete().Inverse();
+            BomRunItems = new HashSet<BomRunItems>();
+            bomrundate = DateTime.Now;
+            batchstatus = "Pending";
         }
     }
 }

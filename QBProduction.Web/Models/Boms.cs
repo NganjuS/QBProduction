@@ -1,40 +1,50 @@
-using FluentNHibernate.Mapping;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBProduction.Web.Models
 {
+    [Table("Boms")]
     public class Boms
     {
-        public virtual int Id { get; set; }
-        public virtual string bomname { get; set; }
-        public virtual string assemblylistid { get; set; }
-        public virtual string assemblyitem { get; set; }
-        public virtual string uom { get; set; }
-        public virtual bool isactive { get; set; }
-        public virtual DateTime createdon { get; set; }
-        public virtual DateTime modifiedon { get; set; }
-        public virtual string createdby { get; set; }
-        public virtual string modifiedby { get; set; }
-        public virtual IList<BomItems> _bomitems { get; set; }
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-    public class BomsMap : ClassMap<Boms>
-    {
-        public BomsMap()
+        [StringLength(255)]
+        public string bomname { get; set; }
+
+        [StringLength(255)]
+        public string assemblylistid { get; set; }
+
+        [StringLength(255)]
+        public string assemblyitem { get; set; }
+
+        [StringLength(50)]
+        public string uom { get; set; }
+
+        public bool isactive { get; set; }
+
+        public DateTime createdon { get; set; }
+
+        public DateTime modifiedon { get; set; }
+
+        [StringLength(100)]
+        public string createdby { get; set; }
+
+        [StringLength(100)]
+        public string modifiedby { get; set; }
+
+        // Navigation property
+        public virtual ICollection<BomItems> BomItems { get; set; }
+
+        public Boms()
         {
-            Id(x => x.Id);
-            Map(x => x.bomname);
-            Map(x => x.assemblylistid);
-            Map(x => x.assemblyitem);
-            Map(x => x.isactive);
-            Map(x => x.uom);
-            Map(x => x.createdon);
-            Map(x => x.modifiedon);
-            Map(x => x.createdby);
-            Map(x => x.modifiedby);
-            HasMany(x => x._bomitems);
-            Table("Boms");
+            BomItems = new HashSet<BomItems>();
+            isactive = true;
+            createdon = DateTime.Now;
+            modifiedon = DateTime.Now;
         }
     }
 }

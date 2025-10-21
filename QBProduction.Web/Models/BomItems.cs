@@ -1,27 +1,32 @@
-using FluentNHibernate.Mapping;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBProduction.Web.Models
 {
+    [Table("BomItems")]
     public class BomItems
     {
-        public virtual int Id { get; set; }
-        public virtual string itemid { get; set; }
-        public virtual decimal cost { get; set; }
-        public virtual decimal qty { get; set; }
-        public virtual Boms bomid { get; set; }
-        public virtual string uom { get; set; }
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-    public class BomItemsMap : ClassMap<BomItems>
-    {
-        public BomItemsMap()
-        {
-            Id(x => x.Id);
-            Map(x => x.itemid);
-            Map(x => x.cost);
-            Map(x => x.qty);
-            Map(x => x.uom);
-            References(x => x.bomid);
-        }
+        [StringLength(255)]
+        public string itemid { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal cost { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal qty { get; set; }
+
+        [StringLength(50)]
+        public string uom { get; set; }
+
+        // Foreign key
+        public int? BomsId { get; set; }
+
+        // Navigation property
+        [ForeignKey("BomsId")]
+        public virtual Boms bomid { get; set; }
     }
 }

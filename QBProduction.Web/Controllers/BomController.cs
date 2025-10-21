@@ -1,59 +1,51 @@
 using System;
+using System.Data.Entity;
 using System.Web.Mvc;
 using QBProduction.Web.Models;
-using QBProduction.Web.Helpers;
+using QBProduction.Web.Data;
 using System.Linq;
-using NHibernate.Linq;
 
 namespace QBProduction.Web.Controllers
 {
     public class BomController : Controller
     {
+        private QBProductionContext db = new QBProductionContext();
+
         // GET: Bom
         public ActionResult Index()
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var boms = session.Query<Boms>()
-                    .Where(b => b.isactive)
-                    .OrderByDescending(b => b.createdon)
-                    .ToList();
+            var boms = db.Boms
+                .Where(b => b.isactive)
+                .OrderByDescending(b => b.createdon)
+                .ToList();
 
-                return View(boms);
-            }
+            return View(boms);
         }
 
         // GET: Bom/Details/5
         public ActionResult Details(int id)
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var bom = session.Query<Boms>()
-                    .Where(b => b.Id == id)
-                    .FirstOrDefault();
+            var bom = db.Boms
+                .Include(b => b.BomItems)
+                .FirstOrDefault(b => b.Id == id);
 
-                if (bom == null)
-                    return HttpNotFound();
+            if (bom == null)
+                return HttpNotFound();
 
-                return View(bom);
-            }
+            return View(bom);
         }
 
         // GET: Bom/Edit/5
         public ActionResult Edit(int id)
         {
-            using (var session = NHibernateHelper.OpenSession())
-            {
-                var bom = session.Query<Boms>()
-                    .Where(b => b.Id == id)
-                    .Fetch(b => b._bomitems)
-                    .FirstOrDefault();
+            var bom = db.Boms
+                .Include(b => b.BomItems)
+                .FirstOrDefault(b => b.Id == id);
 
-                if (bom == null)
-                    return HttpNotFound();
+            if (bom == null)
+                return HttpNotFound();
 
-                return View(bom);
-            }
+            return View(bom);
         }
 
         // POST: Bom/Edit/5
@@ -65,13 +57,9 @@ namespace QBProduction.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    using (var session = NHibernateHelper.OpenSession())
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        bom.modifiedon = DateTime.Now;
-                        session.Update(bom);
-                        transaction.Commit();
-                    }
+                    bom.modifiedon = DateTime.Now;
+                    db.Entry(bom).State = EntityState.Modified;
+                    db.SaveChanges();
 
                     return RedirectToAction("Index");
                 }
@@ -98,15 +86,11 @@ namespace QBProduction.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    using (var session = NHibernateHelper.OpenSession())
-                    using (var transaction = session.BeginTransaction())
-                    {
-                        bom.createdon = DateTime.Now;
-                        bom.modifiedon = DateTime.Now;
-                        bom.isactive = true;
-                        session.Save(bom);
-                        transaction.Commit();
-                    }
+                    bom.createdon = DateTime.Now;
+                    bom.modifiedon = DateTime.Now;
+                    bom.isactive = true;
+                    db.Boms.Add(bom);
+                    db.SaveChanges();
 
                     return RedirectToAction("Index");
                 }
@@ -125,17 +109,13 @@ namespace QBProduction.Web.Controllers
         {
             try
             {
-                using (var session = NHibernateHelper.OpenSession())
-                using (var transaction = session.BeginTransaction())
+                var bom = db.Boms.Find(id);
+                if (bom != null)
                 {
-                    var bom = session.Get<Boms>(id);
-                    if (bom != null)
-                    {
-                        bom.isactive = false;
-                        bom.modifiedon = DateTime.Now;
-                        session.Update(bom);
-                        transaction.Commit();
-                    }
+                    bom.isactive = false;
+                    bom.modifiedon = DateTime.Now;
+                    db.Entry(bom).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
 
                 return RedirectToAction("Index");
@@ -161,6 +141,15 @@ namespace QBProduction.Web.Controllers
                 TempData["Error"] = ex.Message;
                 return RedirectToAction("Index");
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

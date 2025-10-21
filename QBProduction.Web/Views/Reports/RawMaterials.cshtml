@@ -50,7 +50,7 @@
                                     <td>@run.totalqtyproduced.ToString("N2") @run.uom</td>
                                     <td>$@run.totalvalue.ToString("N2")</td>
                                 </tr>
-                                if (run._bomrunsitems != null && run._bomrunsitems.Any())
+                                if (run.BomRunItems != null && run.BomRunItems.Any())
                                 {
                                     <tr>
                                         <td colspan="5">
@@ -64,7 +64,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach (var item in run._bomrunsitems)
+                                                    @foreach (var item in run.BomRunItems)
                                                     {
                                                         <tr>
                                                             <td>@item.product</td>

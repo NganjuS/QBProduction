@@ -1,37 +1,47 @@
-using FluentNHibernate.Mapping;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBProduction.Web.Models
 {
+    [Table("BomRunItems")]
     public class BomRunItems
     {
-        public virtual int Id { get; set; }
-        public virtual string itemid { get; set; }
-        public virtual string product { get; set; }
-        public virtual decimal qtyavailable { get; set; }
-        public virtual decimal cost { get; set; }
-        public virtual decimal qtyperunit { get; set; }
-        public virtual decimal valueperunit { get; set; }
-        public virtual decimal totalqtyused { get; set; }
-        public virtual decimal totalvalue { get; set; }
-        public virtual BomRun bomid { get; set; }
-        public virtual string uom { get; set; }
-    }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-    public class BomRunItemsMap : ClassMap<BomRunItems>
-    {
-        public BomRunItemsMap()
-        {
-            Id(x => x.Id);
-            Map(x => x.itemid);
-            Map(x => x.product);
-            Map(x => x.qtyavailable);
-            Map(x => x.valueperunit);
-            Map(x => x.cost);
-            Map(x => x.totalqtyused);
-            Map(x => x.qtyperunit);
-            Map(x => x.totalvalue);
-            Map(x => x.uom);
-            References(x => x.bomid);
-        }
+        [StringLength(255)]
+        public string itemid { get; set; }
+
+        [StringLength(255)]
+        public string product { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal qtyavailable { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal cost { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal qtyperunit { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal valueperunit { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal totalqtyused { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal totalvalue { get; set; }
+
+        [StringLength(50)]
+        public string uom { get; set; }
+
+        // Foreign key
+        public int? BomRunId { get; set; }
+
+        // Navigation property
+        [ForeignKey("BomRunId")]
+        public virtual BomRun bomid { get; set; }
     }
 }
